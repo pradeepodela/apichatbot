@@ -5,10 +5,11 @@ app = Flask(__name__)
 
 response = {}
 
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    return '<h1>Hello World!</h1>'
+@app.route('/api', methods=['GET', 'POST'])
+def api():
     data = request.get_json()
     print(data)
    
