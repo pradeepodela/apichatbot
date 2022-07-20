@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from flask import Flask, request, jsonify , render_template , redirect , Response , send_file
 import requests
 from function import *
