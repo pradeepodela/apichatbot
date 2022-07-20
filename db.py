@@ -53,7 +53,7 @@ def getall():
         print("Successfully Connected to SQLite")
         cursor.execute("SELECT * FROM surveyinfo")
         data = cursor.fetchall()
-        data = pd.DataFrame(data, columns=['name', 'email', 'date', 'socialmedia', 'timeperiod', 'priceing'])
+        #data = pd.DataFrame(data, columns=['name', 'email', 'date', 'socialmedia', 'timeperiod', 'priceing'])
         cursor.close()
     except sqlite3.Error as error:
         print("Error while creating a sqlite table", error)

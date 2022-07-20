@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from django.shortcuts import render
+from flask import Flask, request, jsonify , render_template , redirect , Response , send_file
 import requests
 from function import *
 from db import *
@@ -23,10 +24,37 @@ servayinfo = {
     'timeperiod': '',
     'priceing': ''
 }
+global loginstat
+loginstat = False
 
 @app.route('/')
 def index():
-    return '<h1>Hello World!</h1>'
+    return render_template('login.html')
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method=='POST':
+        password = str(request.form['typePasswordX-2'])
+        personid = str(request.form['typeEmailX-2'])
+        if password == '12345' and personid == 'admin':
+            global loginstat
+            loginstat = True
+            return render_template('result.html',len = len(getall()),Pokemons =getall())
+
+        else:
+            return jsonify({'status':'Please Login'})
+
+@app.route('/downloadcsv', methods=['GET'])
+def downloadcsv():
+    download_csv()
+    if request.method=='GET':
+        print('okkkkkk')
+        if loginstat == True:
+            return send_file('servaydata.csv', as_attachment=True)
+                
+        else:
+            return jsonify({'status':'Please Login'})
+
+
 @app.route('/api', methods=['GET', 'POST'])
 def api():
     data = request.get_json()
@@ -37,9 +65,6 @@ def api():
         source_currency = data['queryResult']['parameters']['unit-currency']['currency']
         amount = data['queryResult']['parameters']['unit-currency']['amount']
         target_currency = data['queryResult']['parameters']['currency-name']
-        print('-----------------------------------------------------')
-        print(f'this is the intent: {intent}')
-        print(f'Source currency: {source_currency}')
 
         
         cf = fetch_conversion_factor(source_currency,target_currency)
@@ -86,9 +111,6 @@ def api():
         print(data['queryResult']['parameters']['email'])
         servayinfo['email'] = str(data['queryResult']['parameters']['email'])
         servayinfo['date'] = dtime
-        print('#####################################################')
-        print(servayinfo)
-        print('#####################################################')
         update(data=servayinfo)
         print(getall())
         response = dumtext

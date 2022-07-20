@@ -1,6 +1,7 @@
 import pyaztro
 import requests
-
+from db import *
+import pandas as pd
 def horiscope(date , zodicsign):
     date = date.lower()
     taurus = pyaztro.Aztro(sign=zodicsign, day=date)
@@ -14,6 +15,9 @@ def fetch_conversion_factor(source,target):
     response = response.json()
 
     return response['{}_{}'.format(source,target)]
+def download_csv():
+    pd.DataFrame(getall(), columns=['name', 'email', 'date', 'socialmedia', 'timeperiod', 'priceing']).to_csv('servaydata.csv', index=False)
+    return 'servaydata.csv'
 if __name__ == '__main__':
     import smtplib, ssl
 
